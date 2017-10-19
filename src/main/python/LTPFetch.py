@@ -9,7 +9,7 @@ class LTPFetch:
     url = "http://www.bseindia.com/stock-share-price/SiteCache/EQHeaderData.aspx?text="
 
     def __init__(self, Code=''):
-        sleep(2)
+        # sleep(0.2)
         # print("Querying for Code = {}".format(Code))
         try:
             self.response = ''

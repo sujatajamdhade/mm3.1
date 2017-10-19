@@ -14,7 +14,7 @@ from src.main.python.HighLowInfo import HighLowInfo
 from src.main.python.HighLowQuery import HighLowQuery
 from src.main.python.Security import Security
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
-from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile
+from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile, getLastTradedPrice
 
 SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW"
 
@@ -108,9 +108,11 @@ def downloadAllEquitySecurities():
 def filterSecurityByGroup(Securities, Group):
     for row in Securities:
         currentGroup = str(row[4]).strip()
+        currentCode = str(row[0]).strip()
         # print("Group = '{}', Current Group = '{}'".format(Group, currentGroup))
         if Group == currentGroup:
-            SECURITIES.add(Security(Code=row[0], Name=row[1], Group=row[4]))
+            ltp = getLastTradedPrice(currentCode).LTP
+            SECURITIES.add(Security(Code=currentCode, Name=row[1], Group=row[4], LTP=ltp))
     print("Total Securities for Group {} = {}".format(Group, len(SECURITIES)))
 
 def processCode(Code):
