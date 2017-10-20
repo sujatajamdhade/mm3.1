@@ -3,6 +3,7 @@ import csv
 import smtplib
 from datetime import datetime
 
+from src.main.python.Holidays import Holidays
 from src.main.python.LTPInfo import LTPInfo
 from src.main.python.LTPFetch import LTPFetch
 from src.main.python.Security import Security
@@ -64,6 +65,12 @@ def sendAlert(Code, Name, Buy, ltp):
 
 
 def main():
+    h = Holidays()
+
+    if(h.isTodayAHoliday() == True):
+        print("Today is a holiday, YAYYYYY!!")
+        return
+
     readHoldingsFile(HoldingsFile, SECURITIES)
 
     with open(DAILY_FILE, 'w', newline='') as csvfile:

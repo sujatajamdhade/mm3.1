@@ -12,6 +12,7 @@ import requests
 
 from src.main.python.HighLowInfo import HighLowInfo
 from src.main.python.HighLowQuery import HighLowQuery
+from src.main.python.Holidays import Holidays
 from src.main.python.Security import Security
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
 from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile, getLastTradedPrice
@@ -136,6 +137,11 @@ def processCode(Code):
 
 
 def main():
+    h = Holidays()
+    if(h.isTodayAHoliday() == True):
+        print("Today is a holiday, YAYYYYY!!")
+        return
+
     readHoldingsFile(HoldingsFile, SECURITIES_IN_POS)
     # print(SECURITIES_IN_POS)
     # readWatchFile()
