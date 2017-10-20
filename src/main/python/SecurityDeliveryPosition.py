@@ -10,7 +10,7 @@ class SecurityDeliveryPosition:
     regex = "Securitywise Delivery PositionTrade Date\d\d [A-Za-z]{3} \d\d\d\dQuantity Traded([0-9.,]+)Deliverable Quantity\(Gross across client level\)([0-9.,]+)% of Deliverable Quantity to Traded Quantity([0-9.,]+)"
 
     def __init__(self, Code=''):
-        sleep(2)
+        sleep(1.0 / 4.0)
         # print("Querying for Code = {}".format(Code))
         try:
             self.PDQ2TQ = 0
@@ -31,5 +31,3 @@ class SecurityDeliveryPosition:
         except requests.exceptions.HTTPError as e:
             print("Error occurred fetching data for Code = {}, error = {}".format(Code, e))
             # Save Code to retry at later time.
-
-

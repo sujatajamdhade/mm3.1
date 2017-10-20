@@ -12,9 +12,10 @@ import requests
 
 from src.main.python.HighLowInfo import HighLowInfo
 from src.main.python.HighLowQuery import HighLowQuery
+from src.main.python.Holidays import Holidays
 from src.main.python.Security import Security
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
-from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile
+from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile, getLastTradedPrice
 
 SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW"
 
@@ -105,13 +106,17 @@ def downloadAllEquitySecurities():
         print("Total Equity Securities = {}".format(len(listOfSecurities)))
         return listOfSecurities
 
+
 def filterSecurityByGroup(Securities, Group):
     for row in Securities:
         currentGroup = str(row[4]).strip()
+        currentCode = str(row[0]).strip()
         # print("Group = '{}', Current Group = '{}'".format(Group, currentGroup))
         if Group == currentGroup:
-            SECURITIES.add(Security(Code=row[0], Name=row[1], Group=row[4]))
+            ltp = getLastTradedPrice(currentCode).LTP
+            SECURITIES.add(Security(Code=currentCode, Name=row[1], Group=row[4], LTP=ltp))
     print("Total Securities for Group {} = {}".format(Group, len(SECURITIES)))
+
 
 def processCode(Code):
     q = HighLowQuery(Code)
@@ -134,6 +139,11 @@ def processCode(Code):
 
 
 def main():
+    h = Holidays()
+    if (h.isTodayAHoliday() == True):
+        print("Today is a holiday, YAYYYYY!!")
+        return
+
     readHoldingsFile(HoldingsFile, SECURITIES_IN_POS)
     # print(SECURITIES_IN_POS)
     # readWatchFile()
@@ -142,7 +152,7 @@ def main():
     with open(MarketPositions, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         # Print in a vertical format so it is easy to import and analyze.
-        print("No., "+ SECURITY_FIELDS);
+        print("No., " + SECURITY_FIELDS);
         csvwriter.writerow(SECURITY_FIELDS.split(','))
         counter = 0
         for SEC in SECURITIES:
@@ -152,7 +162,7 @@ def main():
             s = processCode(SEC.Code)
             if s is not None:
                 counter += 1
-                print("{:3d}:{}".format(counter,s.print_r()))
+                print("{:3d}:{}".format(counter, s.print_r()))
                 csvwriter.writerow(s.print_r().split(','))
 
         try:
