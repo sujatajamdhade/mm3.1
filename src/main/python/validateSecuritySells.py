@@ -67,7 +67,7 @@ def sendAlert(Code, Name, Buy, ltp):
 def main():
     h = Holidays()
 
-    if(h.isTodayAHoliday() == True):
+    if (h.isTodayAHoliday() == True):
         print("Today is a holiday, YAYYYYY!!")
         return
 
@@ -83,12 +83,15 @@ def main():
             #                                                                               LTPInfo.LTP*1.2))
             buy20p = Security.BUY * 1.20
             diff = buy20p - LTPInfo.LTP
-            f__Details = "{}, {}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}".format(Code, Security.Name, Security.BUY, LTPInfo.LTP,
-                                                                        buy20p, diff, percentage(LTPInfo.LTP, Security.BUY)-100.00)
+            f__Details = "{}, {}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}".format(Code, Security.Name, Security.BUY,
+                                                                                 LTPInfo.LTP,
+                                                                                 buy20p, diff, percentage(LTPInfo.LTP,
+                                                                                                          Security.BUY) - 100.00)
             print(f__Details)
             csvwriter.writerow(f__Details.split(','))
             if diff <= 0:
                 sendAlert(Security.Code, Security.Name, Security.BUY, LTPInfo.LTP)
+
 
 if __name__ == "__main__":
     main()

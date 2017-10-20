@@ -10,7 +10,7 @@ class Holidays:
     holidayDates = []
 
     def __init__(self):
-        sleep(1.0/4.0)
+        sleep(1.0 / 4.0)
         try:
             self.response = ''
             r = requests.get(self.url)
@@ -23,15 +23,15 @@ class Holidays:
             equityHolidays = tables[3]
             for row in equityHolidays.find_all('tr'):
                 cols = row.find_all('td')
-                dt = ' '.join(cols[2].text.strip().split()) # e.g. January 26, 2017
+                dt = ' '.join(cols[2].text.strip().split())  # e.g. January 26, 2017
                 try:
                     obj = datetime.datetime.strptime(dt, "%B %d, %Y").date()
                     self.holidayDates.append(obj)
                 except ValueError as v:
                     # print("Invalid Date = {}".format(dt))
                     None
-            # print(len(self.holidayDates))
-            # print(self.holidayDates)
+                    # print(len(self.holidayDates))
+                    # print(self.holidayDates)
         except requests.exceptions.HTTPError as e:
             print("Error occurred fetching holiday dates data, error = {}".format(e))
 
@@ -43,6 +43,6 @@ class Holidays:
                 return True
         return False
 
-# if __name__ == "__main__":
-#     h = Holidays()
-#     print(h.isTodayAHoliday())
+        # if __name__ == "__main__":
+        #     h = Holidays()
+        #     print(h.isTodayAHoliday())

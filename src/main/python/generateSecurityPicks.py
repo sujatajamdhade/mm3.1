@@ -106,6 +106,7 @@ def downloadAllEquitySecurities():
         print("Total Equity Securities = {}".format(len(listOfSecurities)))
         return listOfSecurities
 
+
 def filterSecurityByGroup(Securities, Group):
     for row in Securities:
         currentGroup = str(row[4]).strip()
@@ -115,6 +116,7 @@ def filterSecurityByGroup(Securities, Group):
             ltp = getLastTradedPrice(currentCode).LTP
             SECURITIES.add(Security(Code=currentCode, Name=row[1], Group=row[4], LTP=ltp))
     print("Total Securities for Group {} = {}".format(Group, len(SECURITIES)))
+
 
 def processCode(Code):
     q = HighLowQuery(Code)
@@ -138,7 +140,7 @@ def processCode(Code):
 
 def main():
     h = Holidays()
-    if(h.isTodayAHoliday() == True):
+    if (h.isTodayAHoliday() == True):
         print("Today is a holiday, YAYYYYY!!")
         return
 
@@ -150,7 +152,7 @@ def main():
     with open(MarketPositions, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         # Print in a vertical format so it is easy to import and analyze.
-        print("No., "+ SECURITY_FIELDS);
+        print("No., " + SECURITY_FIELDS);
         csvwriter.writerow(SECURITY_FIELDS.split(','))
         counter = 0
         for SEC in SECURITIES:
@@ -160,7 +162,7 @@ def main():
             s = processCode(SEC.Code)
             if s is not None:
                 counter += 1
-                print("{:3d}:{}".format(counter,s.print_r()))
+                print("{:3d}:{}".format(counter, s.print_r()))
                 csvwriter.writerow(s.print_r().split(','))
 
         try:

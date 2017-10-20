@@ -8,7 +8,7 @@ class HighLowQuery:
     url = "http://www.bseindia.com/stock-share-price/SiteCache/52WeekHigh.aspx?Type=EQ&text="
 
     def __init__(self, Code=''):
-        sleep(1.0/4.0)
+        sleep(1.0 / 4.0)
         # print("Querying for Code = {}".format(Code))
         try:
             self.response = ''
@@ -19,5 +19,3 @@ class HighLowQuery:
             self.response = soup.text
         except requests.exceptions.HTTPError as e:
             print("Error occurred fetching data for Code = {}, error = {}".format(Code, e))
-
-
