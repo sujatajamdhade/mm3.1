@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 # Version: 30092017.0.1
-
+import base64
 import csv
-import os.path
-import sys
 # Imports
 from datetime import datetime
 
@@ -15,6 +13,7 @@ from src.main.python.HighLowQuery import HighLowQuery
 from src.main.python.Holidays import Holidays
 from src.main.python.Security import Security
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
+from src.main.python.SendMail import SendMail
 from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile, getLastTradedPrice
 
 SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW"
@@ -137,6 +136,11 @@ def processCode(Code):
             return None
         return s
 
+def sendReport():
+    password = base64.b64decode("c2ExMjNBU0g=").decode('utf-8')
+    m = SendMail(sender="sujata.c.jamdhade@gmail.com", password=password, recipients=['sachincjamdhade@gmail.com'],
+                 subject="Market Positions", attachments=[MarketPositions], msg="Market Positions for {}".format(datetime.today().date()))
+    m.send()
 
 def main():
     h = Holidays()
@@ -152,7 +156,7 @@ def main():
     with open(MarketPositions, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         # Print in a vertical format so it is easy to import and analyze.
-        print("No., " + SECURITY_FIELDS);
+        print("No., " + SECURITY_FIELDS)
         csvwriter.writerow(SECURITY_FIELDS.split(','))
         counter = 0
         for SEC in SECURITIES:
@@ -177,6 +181,8 @@ def main():
                 Code = RETRY_CODES.pop()
         except KeyError as e:
             print("All Codes processed.")
+
+    sendReport()
 
 
 if __name__ == "__main__":
