@@ -1,0 +1,10 @@
+#!/bin/sh
+/bin/sh -c "echo 0 > /sys/class/rtc/rtc0/wakealarm"
+day="`date +%a`"
+if [ "$day" = "Fri" ]
+then
+    /bin/sh -c "echo `date '+%s' -d '+ 57 hours'` > /sys/class/rtc/rtc0/wakealarm"
+else
+    /bin/sh -c "echo `date '+%s' -d '+ 9 hours'` > /sys/class/rtc/rtc0/wakealarm"
+fi
+/sbin/shutdown -h now
