@@ -5,9 +5,9 @@ import requests
 
 from src.main.python.Security import Security
 
-DATA_FOLDER = "/home/sachin/moneymachine/data"
+DATA_FOLDER = "/home/sachin/data"
 
-RESOURCE_FOLDER = "/home/sachin/pycharm/moneymachine/src/main/resource"
+RESOURCE_FOLDER = "/home/sachin/moneymachine/src/main/resource"
 
 EVENT_DATA_FILE = "{}/EVENT_DATA_MARKETWATCH_ALL.txt".format(RESOURCE_FOLDER)
 

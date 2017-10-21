@@ -16,10 +16,10 @@ DAY = dt.day
 MONTH = dt.month
 YEAR = dt.year
 
-HoldingsFile = "/home/sachin/moneymachine/holdings/holdings.csv"
+HoldingsFile = "/home/sachin/data/holdings/holdings.csv"
 FIELDS = "Code,Name,Buy Price"
 
-OUTPUT_FOLDER = "/home/sachin/moneymachine/out"
+OUTPUT_FOLDER = "/home/sachin/data/out"
 DAILY_FILE = "{}/DailyGain_{}_{}_{}.csv".format(OUTPUT_FOLDER, DAY, MONTH, YEAR)
 DAILY_FIELDS = "Code, Name, BUY, LTP, 20p, Diff, Percentage"
 

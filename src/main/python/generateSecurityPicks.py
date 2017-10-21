@@ -25,11 +25,11 @@ SECURITIES = set()
 # Retry Set for Failed Codes
 RETRY_CODES = set()
 
-DATA_FOLDER = "/home/sachin/moneymachine/data"
+DATA_FOLDER = "/home/sachin/data"
 # DATA_FOLDER = "/home/sachin/Downloads"
-OUTPUT_FOLDER = "/home/sachin/moneymachine/out"
+OUTPUT_FOLDER = "/home/sachin/data/out"
 
-RESOURCE_FOLDER = "/home/sachin/pycharm/moneymachine/src/main/resource"
+RESOURCE_FOLDER = "/home/sachin/moneymachine/src/main/resource"
 
 EVENT_DATA_FILE = "{}/EVENT_DATA_LIST_SECURITIES_ALL.txt".format(RESOURCE_FOLDER)
 
