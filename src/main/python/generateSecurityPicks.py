@@ -11,6 +11,7 @@ import requests
 from src.main.python.HighLowInfo import HighLowInfo
 from src.main.python.HighLowQuery import HighLowQuery
 from src.main.python.Holidays import Holidays
+from src.main.python.MarketWatchFile import MarketWatchFile
 from src.main.python.Security import Security
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
 from src.main.python.SendMail import SendMail
@@ -28,7 +29,9 @@ DATA_FOLDER = "/home/sachin/moneymachine/data"
 # DATA_FOLDER = "/home/sachin/Downloads"
 OUTPUT_FOLDER = "/home/sachin/moneymachine/out"
 
-EVENT_DATA_FILE = "{}/EVENT_DATA.txt".format(DATA_FOLDER)
+RESOURCE_FOLDER = "/home/sachin/pycharm/moneymachine/src/main/resource"
+
+EVENT_DATA_FILE = "{}/EVENT_DATA_LIST_SECURITIES_ALL.txt".format(RESOURCE_FOLDER)
 
 # Get Current Date
 dt = datetime.now()
@@ -107,14 +110,16 @@ def downloadAllEquitySecurities():
 
 
 def filterSecurityByGroup(Securities, Group):
+    L_SECURITIES = set()
     for row in Securities:
         currentGroup = str(row[4]).strip()
         currentCode = str(row[0]).strip()
         # print("Group = '{}', Current Group = '{}'".format(Group, currentGroup))
         if Group == currentGroup:
             ltp = getLastTradedPrice(currentCode).LTP
-            SECURITIES.add(Security(Code=currentCode, Name=row[1], Group=row[4], LTP=ltp))
-    print("Total Securities for Group {} = {}".format(Group, len(SECURITIES)))
+            L_SECURITIES.add(Security(Code=currentCode, Name=row[1], Group=row[4], LTP=ltp))
+    print("Total Securities for Group {} = {}".format(Group, len(L_SECURITIES)))
+    return L_SECURITIES
 
 
 def processCode(Code):
@@ -150,9 +155,12 @@ def main():
 
     readHoldingsFile(HoldingsFile, SECURITIES_IN_POS)
     # print(SECURITIES_IN_POS)
-    # readWatchFile()
-    listOfSecurities = downloadAllEquitySecurities()
-    filterSecurityByGroup(listOfSecurities, "A")
+    m = MarketWatchFile()
+    # m_securities = m.get()
+    m.download()
+    readWatchFile()
+    # listOfSecurities = downloadAllEquitySecurities()
+    # SECURITIES = filterSecurityByGroup(listOfSecurities, "A")
     with open(MarketPositions, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)
         # Print in a vertical format so it is easy to import and analyze.
