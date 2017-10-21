@@ -68,7 +68,7 @@ class MarketWatchFile:
                 counter += 1
                 if counter == 1:
                     continue
-                print(row)
+                # print(row)
                 Code = row[0].strip()
                 Name = row[1].strip()
                 Group = row[2].strip()
