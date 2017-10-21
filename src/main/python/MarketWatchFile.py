@@ -76,7 +76,6 @@ class MarketWatchFile:
                 VOLUME = float(row[7].strip().replace(',', ''))
                 TURNOVER = float(row[8].strip().replace(',', ''))
                 TRADES = float(row[9].strip().replace(',', ''))
-                print("Code = {}".format(Code))
                 self.D_SECURITIES[Code] = Security(Code=Code, Name=Name, Group=Group, LTP=LTP, TURNOVER=TURNOVER,
                                                    VOLUME=VOLUME, TRADES=TRADES)
             print("Total securities loaded = {}".format(len(self.D_SECURITIES)))
