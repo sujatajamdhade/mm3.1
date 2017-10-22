@@ -10,8 +10,8 @@ from src.main.python.Holidays import Holidays
 from src.main.python.MarketWatchFile import MarketWatchFile
 from src.main.python.Security import SECURITY_FIELDS
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
+from src.main.python.SecurityHoldings import SecurityHoldings
 from src.main.python.SendMail import SendMail
-from src.main.python.SecurityHoldings import readHoldingsFile, HoldingsFile
 
 # Retry Set for Failed Codes
 RETRY_CODES = set()
@@ -55,10 +55,11 @@ def main():
         return
 
     # List of Securities currently holding position.
-    SECURITIES_IN_POS = {}
+    SECURITIES_IN_HOLDING = {}
 
-    readHoldingsFile(HoldingsFile, SECURITIES_IN_POS)
-    # print(SECURITIES_IN_POS)
+    h = SecurityHoldings()
+    h.getSecurityHoldings(SECURITIES_IN_HOLDING)
+    # print(SECURITIES_IN_HOLDING)
     m = MarketWatchFile()
     # m_securities = m.get()
     # m.download()
@@ -72,7 +73,7 @@ def main():
         csvwriter.writerow(SECURITY_FIELDS.split(','))
         counter = 0
         for SEC in SECURITIES:
-            if any(x == SEC.Code for x in SECURITIES_IN_POS.keys()):
+            if any(x == SEC.Code for x in SECURITIES_IN_HOLDING.keys()):
                 print("Currently holding position for {} ... so skipping.".format(SEC.Code))
                 continue
             s = processCode(SEC.Code, SECURITIES)
