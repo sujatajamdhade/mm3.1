@@ -17,7 +17,7 @@ from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
 from src.main.python.SendMail import SendMail
 from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile, getLastTradedPrice
 
-SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW"
+SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW,BUY"
 
 # Empty List of Securities.
 SECURITIES = set()
