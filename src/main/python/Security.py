@@ -1,5 +1,6 @@
 from src.main.python.Utilities import percentage
 
+SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW,BUY"
 
 class Security:
     """A BSE Equity Security."""
@@ -87,3 +88,5 @@ class Security:
         mul = (float(percent) / 100.0) + 1.0
         res = self.V52WL * mul
         return res
+
+

@@ -3,14 +3,16 @@ import re
 
 import requests
 
+from src.main.python.Globals import DATA_FOLDER, DAY, YEAR, RESOURCE_FOLDER
 from src.main.python.Security import Security
-
-DATA_FOLDER = "/home/sachin/data"
-
-RESOURCE_FOLDER = "/home/sachin/moneymachine/src/main/resource"
 
 EVENT_DATA_FILE = "{}/EVENT_DATA_MARKETWATCH_ALL.txt".format(RESOURCE_FOLDER)
 
+# File containing all Group A securities.
+WatchFile = "{}/MarketWatch_{:02d}_00_{}.csv".format(DATA_FOLDER, DAY, YEAR)
+
+# TODO: We need to replace this text in the watchfile something the BSE site adds.
+TOTAL_TURNOVER = "Total Turnover  (<img src='../../../include/images/rs.gif' alt='my image' /> Lac)"
 
 class MarketWatchFile:
     CSV_URL = 'http://www.bseindia.com/markets/equity/EQReports/MarketWatch.aspx?expandable=2'
@@ -81,14 +83,31 @@ class MarketWatchFile:
             print("Total securities loaded = {}".format(len(self.D_SECURITIES)))
 
     def get(self):
-        return self.D_SECURITIES
+        return self.D_SECURITIES.values()
 
     def download(self):
         thefile = open(DATA_FOLDER + "/" + self.fname, 'w')
         thefile.write("%s" % self.decoded_content)
 
+    def readWatchFile(self):
+        S_SECURITIES = set()
+        try:
+            with open(WatchFile) as csvfile:
+                # Read csv file.
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    SEC = Security(Code=row['Security Code'], Name=row['Security Name'], Group=row['Security Group'],
+                                   LTP=float(row['LTP']), TURNOVER=float(row[TOTAL_TURNOVER]),
+                                   VOLUME=float(row['No. of Shares Traded ']), TRADES=float(row['No. of Trades']))
+                    S_SECURITIES.add(SEC)
+                    # print("Security Code = " + SEC.Code + ", Security Name = " + SEC.Name + ", Group = " + SEC.Group )
+                print("Total Securities read = {}".format(len(S_SECURITIES)))
+        except IOError:
+            print(WatchFile + " File not found.")
+        return S_SECURITIES
 
 
 if __name__ == "__main__":
     m = MarketWatchFile()
     m.download()
+

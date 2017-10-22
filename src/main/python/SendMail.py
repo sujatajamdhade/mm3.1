@@ -1,3 +1,4 @@
+import base64
 import os
 import smtplib
 from email import encoders
@@ -60,3 +61,21 @@ class SendMail:
         except:
             print("Unable to send the email. Error: ", sys.exc_info()[0])
             raise
+
+
+def sendAlert(Code, Name, Buy, ltp):
+    fromaddr = 'sujata.c.jamdhade@gmail.com'
+    toaddrs = 'sachincjamdhade@gmail.com'
+    msg = "\r\n".join([
+        "Subject: Sell Alert for {}".format(Name),
+        "",
+        "Sell Security = {}, Buyed at = {:.2f}, Current Price ={:.2f} has crossed 20% gain.".format(Code, Buy, ltp)
+    ])
+    username = 'sujata.c.jamdhade@gmail.com'
+    password = "c2ExMjNBU0g="
+    server = smtplib.SMTP('smtp.gmail.com:587')
+    server.ehlo()
+    server.starttls()
+    server.login(username, base64.b64decode(password).decode('utf-8'))
+    server.sendmail(from_addr=fromaddr, to_addrs=toaddrs, msg=msg)
+    server.quit()

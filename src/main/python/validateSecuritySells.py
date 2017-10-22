@@ -1,30 +1,19 @@
-import base64
 import csv
-import smtplib
-from datetime import datetime
 
+from src.main.python.Globals import OUTPUT_FOLDER, DAY, MONTH, YEAR, DATA_FOLDER
 from src.main.python.Holidays import Holidays
-from src.main.python.LTPInfo import LTPInfo
 from src.main.python.LTPFetch import LTPFetch
+from src.main.python.LTPInfo import LTPInfo
 from src.main.python.Security import Security
-
 # Get Current Date
+from src.main.python.SendMail import sendAlert
 from src.main.python.Utilities import percentage
 
-dt = datetime.now()
-DAY = dt.day
-MONTH = dt.month
-YEAR = dt.year
-
-HoldingsFile = "/home/sachin/data/holdings/holdings.csv"
+HoldingsFile = "{}/holdings/holdings.csv".format(DATA_FOLDER)
 FIELDS = "Code,Name,Buy Price"
 
-OUTPUT_FOLDER = "/home/sachin/data/out"
 DAILY_FILE = "{}/DailyGain_{}_{}_{}.csv".format(OUTPUT_FOLDER, DAY, MONTH, YEAR)
 DAILY_FIELDS = "Code, Name, BUY, LTP, 20p, Diff, Percentage"
-
-# Empty List of Securities.
-SECURITIES = {}
 
 
 def readHoldingsFile(file, securitiesHeld):
@@ -46,24 +35,6 @@ def getLastTradedPrice(Code):
     return LTPInfo(ltp.response)
 
 
-def sendAlert(Code, Name, Buy, ltp):
-    fromaddr = 'sujata.c.jamdhade@gmail.com'
-    toaddrs = 'sachincjamdhade@gmail.com'
-    msg = "\r\n".join([
-        "Subject: Sell Alert for {}".format(Name),
-        "",
-        "Sell Security = {}, Buyed at = {:.2f}, Current Price ={:.2f} has crossed 20% gain.".format(Code, Buy, ltp)
-    ])
-    username = 'sujata.c.jamdhade@gmail.com'
-    password = "c2ExMjNBU0g="
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.ehlo()
-    server.starttls()
-    server.login(username, base64.b64decode(password).decode('utf-8'))
-    server.sendmail(from_addr=fromaddr, to_addrs=toaddrs, msg=msg)
-    server.quit()
-
-
 def main():
     h = Holidays()
 
@@ -71,6 +42,8 @@ def main():
         print("Today is a holiday, YAYYYYY!!")
         return
 
+    # Empty Dictionary of Securities.
+    SECURITIES = {}
     readHoldingsFile(HoldingsFile, SECURITIES)
 
     with open(DAILY_FILE, 'w', newline='') as csvfile:
