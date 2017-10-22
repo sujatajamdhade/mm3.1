@@ -6,6 +6,7 @@ from src.main.python.Globals import RESOURCE_FOLDER
 from src.main.python.Security import Security
 from src.main.python.validateSecuritySells import getLastTradedPrice
 
+EVENT_DATA_FILE = "{}/EVENT_DATA_LIST_SECURITIES_ALL.txt".format(RESOURCE_FOLDER)
 
 class BSECorporateSecurities:
 
@@ -59,4 +60,3 @@ class BSECorporateSecurities:
         return L_SECURITIES
 
 
-EVENT_DATA_FILE = "{}/EVENT_DATA_LIST_SECURITIES_ALL.txt".format(RESOURCE_FOLDER)

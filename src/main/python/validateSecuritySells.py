@@ -1,33 +1,18 @@
 import csv
 
-from src.main.python.Globals import OUTPUT_FOLDER, DAY, MONTH, YEAR, DATA_FOLDER
+from src.main.python.Globals import OUTPUT_FOLDER, DAY, MONTH, YEAR
 from src.main.python.Holidays import Holidays
 from src.main.python.LTPFetch import LTPFetch
 from src.main.python.LTPInfo import LTPInfo
-from src.main.python.Security import Security
 # Get Current Date
+from src.main.python.SecurityHoldings import SecurityHoldings
 from src.main.python.SendMail import sendAlert
 from src.main.python.Utilities import percentage
 
-HoldingsFile = "{}/holdings/holdings.csv".format(DATA_FOLDER)
 FIELDS = "Code,Name,Buy Price"
 
 DAILY_FILE = "{}/DailyGain_{}_{}_{}.csv".format(OUTPUT_FOLDER, DAY, MONTH, YEAR)
 DAILY_FIELDS = "Code, Name, BUY, LTP, 20p, Diff, Percentage"
-
-
-def readHoldingsFile(file, securitiesHeld):
-    try:
-        with open(file) as csvfile:
-            # Read csv file.
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                SEC = Security(Code=row['Code'], Name=row['Name'], BUY=float(row['Buy Price']))
-                securitiesHeld[SEC.Code] = SEC
-                # print("Security Code = " + SEC.Code + ", Security Name = " + SEC.Name + ", Group = " + SEC.Group )
-            print("Total Securities in holding = {}".format(len(securitiesHeld)))
-    except IOError:
-        print(file + " File not found.")
 
 
 def getLastTradedPrice(Code):
@@ -44,7 +29,8 @@ def main():
 
     # Empty Dictionary of Securities.
     SECURITIES = {}
-    readHoldingsFile(HoldingsFile, SECURITIES)
+    h = SecurityHoldings()
+    h.getSecurityHoldings(SECURITIES)
 
     with open(DAILY_FILE, 'w', newline='') as csvfile:
         csvwriter = csv.writer(csvfile, delimiter=',', quotechar='\'', quoting=csv.QUOTE_MINIMAL)

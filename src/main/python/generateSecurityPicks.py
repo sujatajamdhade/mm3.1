@@ -11,7 +11,7 @@ from src.main.python.MarketWatchFile import MarketWatchFile
 from src.main.python.Security import SECURITY_FIELDS
 from src.main.python.SecurityDeliveryPosition import SecurityDeliveryPosition
 from src.main.python.SendMail import SendMail
-from src.main.python.validateSecuritySells import readHoldingsFile, HoldingsFile
+from src.main.python.SecurityHoldings import readHoldingsFile, HoldingsFile
 
 # Retry Set for Failed Codes
 RETRY_CODES = set()
