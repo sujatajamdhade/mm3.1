@@ -1,6 +1,6 @@
 from src.main.python.Utilities import percentage
 
-SECURITY_FIELDS = "Code,Name,Group,10p,20p,30p,LTP,V52WH,V52WHDT,V52WL,V52WLDT,MH,ML,TURNOVER,VOLUME,TRADES,PDQ2TQ,PALOW,BUY"
+SECURITY_FIELDS = "Code,Name,Group,LTP,52 Week Low,52 Week Low Date,52 Week High, 52 Week High Date, 20p of LTP, Monthly Change,Fluctuation Needed, Turnover,Volume,Trades,PDQ2TQ,PALOW"
 
 class Security:
     """A BSE Equity Security."""
@@ -78,10 +78,15 @@ class Security:
         print(self.print_r());
 
     def print_r(self):
-        return "{}, {}, {}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {}, {:.2f}, {}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}".format(
-            self.Code, self.Name, self.Group, self.percentOfLow(10), self.percentOfLow(20), self.percentOfLow(30),
-            self.LTP, self.V52WH, self.V52WHDT, self.V52WL, self.V52WLDT, self.MH, self.ML, self.TURNOVER, self.VOLUME,
-            self.TRADES, self.PDQ2TQ, self.PALOW, self.BUY)
+        ltp20p = self.percentOfLtp(20)
+        return "{}, {}, {}, " \
+               "{:.2f}, {:.2f}, {}, {:.2f}, {}, {:.2f}, {:.2f}, {:.2f}, " \
+               "{:.2f}, {:.2f}, {:.2f}, " \
+               "{:.2f}, {:.2f}".format(
+            self.Code, self.Name, self.Group,
+            self.LTP, self.V52WL, self.V52WLDT, self.V52WH, self.V52WHDT, ltp20p, self.MH - self.ML, ltp20p - self.LTP,
+            self.TURNOVER, self.VOLUME, self.TRADES,
+            self.PDQ2TQ, self.PALOW)
 
     def percentOfLow(self, percent):
         res = 0.0
@@ -89,4 +94,9 @@ class Security:
         res = self.V52WL * mul
         return res
 
+    def percentOfLtp(self, percent):
+        res = 0.0
+        mul = (float(percent) / 100.0) + 1.0
+        res = self.LTP * mul
+        return res
 
