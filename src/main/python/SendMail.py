@@ -63,13 +63,14 @@ class SendMail:
             raise
 
 
-def sendAlert(Code, Name, Buy, ltp):
+def sendAlert(Code, Name, Buy, ltp, currentGain):
     fromaddr = 'sujata.c.jamdhade@gmail.com'
     toaddrs = 'sachincjamdhade@gmail.com'
     msg = "\r\n".join([
         "Subject: Sell Alert for {}".format(Name),
         "",
-        "Sell Security = {}, Buyed at = {:.2f}, Current Price ={:.2f} has crossed 20% gain.".format(Code, Buy, ltp)
+        "Sell Security = {} ({}), \r\nBuy Price = {:.2f}, \r\nCurrent Price ={:.2f}, has crossed 20% gain.".format(Name, Code, Buy, ltp),
+        "Current Gain = {:.2f}".format(currentGain)
     ])
     username = 'sujata.c.jamdhade@gmail.com'
     password = "c2ExMjNBU0g="

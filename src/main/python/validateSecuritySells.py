@@ -13,11 +13,28 @@ FIELDS = "Code,Name,Buy Price"
 
 DAILY_FILE = "{}/DailyGain_{}_{}_{}.csv".format(OUTPUT_FOLDER, DAY, MONTH, YEAR)
 DAILY_FIELDS = "Code, Name, BUY, LTP, 20p, Diff, Percentage"
+ALERTED_FILE = "{}/Alerted_{}_{}_{}.txt".format(OUTPUT_FOLDER, DAY, MONTH, YEAR)
 
 
 def getLastTradedPrice(Code):
     ltp = LTPFetch(Code)
     return LTPInfo(ltp.response)
+
+
+def alertNotAlreadySent(Code):
+    securities = []
+    try:
+        with open(ALERTED_FILE, 'r', newline='') as alerted:
+            securities = alerted.read().splitlines()
+    except FileNotFoundError as e:
+        None
+
+    if Code in securities:
+        return False
+    else:
+        with open(ALERTED_FILE, "a") as f:
+            f.write(Code)
+        return True
 
 
 def main():
@@ -42,14 +59,16 @@ def main():
             #                                                                               LTPInfo.LTP*1.2))
             buy20p = Security.BUY * 1.20
             diff = buy20p - LTPInfo.LTP
+            currentGain = percentage(LTPInfo.LTP - Security.BUY, Security.BUY)
             f__Details = "{}, {}, {:.2f}, {:.2f}, {:.2f}, {:.2f}, {:.2f}".format(Code, Security.Name, Security.BUY,
                                                                                  LTPInfo.LTP,
                                                                                  buy20p, diff, percentage(LTPInfo.LTP,
                                                                                                           Security.BUY) - 100.00)
             print(f__Details)
             csvwriter.writerow(f__Details.split(','))
-            if diff <= 0:
-                sendAlert(Security.Code, Security.Name, Security.BUY, LTPInfo.LTP)
+            if diff <= 0 and alertNotAlreadySent(Security.Code):
+                sendAlert(Security.Code, Security.Name, Security.BUY, LTPInfo.LTP, currentGain)
+                print("Alert Sent")
 
 
 if __name__ == "__main__":
